@@ -44,14 +44,6 @@ names(Grid) <- c("M", "IJK", "S", "SIMP", "snr")
 seed <- 1:nrow(Grid)
 Grid <- cbind(Grid,seed)
 
-### Inizio Elaborazione
-
-## test for one row of the grid
-# grow <- Grid[31,]
-# out <- gold(grow)
-
-### In parallel, on each row of Grid
-
 N <- nrow(Grid)
 cores <- detectCores()-2
 cl <- makeCluster(cores, outfile = "") # 
