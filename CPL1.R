@@ -66,7 +66,6 @@ cputime = system.time({
   }
   X <- k_fold(X, m = 1, modes = c(n, m, p))
   
-  # dato A, B, C, ricavo w (lambda nell'articolo): w_k = <X, a[,k] o b[,k] o c[,k]>
   w_hat = rep(0, times = r)
   
   for(j in 1:r)
@@ -74,7 +73,6 @@ cputime = system.time({
     w_hat[j] = product(X, c(1,2,3), a_init[j,], b_init[j,], c_init[j,]) 
   }
   
-  # dato A, B, C, w, ricavo Y (ricostruzione di X) Y = sum_k w_k * a[,k] o b[,k] o c[,k]
   Y = as.tensor(array(0,dim(X)))
   
   obj_value_prev =  fnorm(Y - X) + lamA*sum(abs(a_init)) + lamB*sum(abs(b_init)) + lamC*sum(abs(c_init))
@@ -95,12 +93,10 @@ cputime = system.time({
       lizt <- list('mat' = as.matrix(a_init[j,]),'mat2' = as.matrix(b_init[j,]),'mat3'= as.matrix(c_init[j,]))
       aux =   ttl(as.tensor(array(1,c(1,1,1))), lizt, ms = c(1,2,3))
       
-      Y  = Y -  w_hat[j]*aux # Ricostruzione totale - ricostruzione via k-esima componente
-      Z =  X - Y # dato residuo: dato - ricostruzione via componenti 1:k 
+      Y  = Y -  w_hat[j]*aux 
+      Z =  X - Y 
       
-      temp2 = PTD_L1L1L1(Z = Z, c1 = lamA, c2 = lamB, c3 = lamC, Niter = 5) # ricavo a[,k], b[,k], c[,k] ottimali per il dato residuo
-      
-      # ottengo la componente k-esima w_k * a[,k] o b[,k] o c[,k] che meglio approssima il dato residuo Z
+      temp2 = PTD_L1L1L1(Z = Z, c1 = lamA, c2 = lamB, c3 = lamC, Niter = 5) 
       a_init[j,] = as.vector(temp2$u)
       b_init[j,] = as.vector(temp2$v)      
       c_init[j,] = as.vector(temp2$w)
@@ -109,7 +105,6 @@ cputime = system.time({
       lizt <- list('mat' = as.matrix(a_init[j,]), 'mat2' = as.matrix(b_init[j,]), 'mat3'= as.matrix(c_init[j,]))
       aux =   ttl(as.tensor(array(1,c(1,1,1))), lizt, ms = c(1,2,3))
       
-      # aggiorno la k-esima componente della ricostruzione Y
       Y = Y + w_hat[j]*aux 
     }
     
