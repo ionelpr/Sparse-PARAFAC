@@ -4,7 +4,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 require(doParallel)
 
-source("gold_CP_CPL1_CPL0_CPKG.R")
+source("gold.R")
 source("Phi.R")
 
 # Design Matrix: 4 Design Variables. M dataset for each cell of the design matrix.
